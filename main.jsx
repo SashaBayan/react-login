@@ -5,60 +5,66 @@ if (typeof window !== 'undefined') {
 
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, Route, Link } from 'react-router'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import { Router, Route, Link, History } from 'react-router'
 import { createHistory, useBasename } from 'history'
+import authenticate from './auth'
 
 import './components/styles/app.css';
-// import { App } from './components/App.jsx';
 
 const history = useBasename(createHistory)({
   basename: ''
 })
 
-class App extends React.Component {
-  render() {
-    const { pathname } = this.props.location
+const App = React.createClass({
+  mixins: [ History ],
+
+  handleSubmit (e) {
+    e.preventDefault();
+    if(authenticate(this.refs.username.value, this.refs.password.value)){
+      this.history.pushState(null, `/success`);
+    }
+  },
+
+  render () {
     return (
       <div>
-        <ul>
-          <li><Link to="/page1">Page 1</Link></li>
-          <li><Link to="/page2">Page 2</Link></li>
-        </ul>
-        {React.cloneElement(this.props.children || <div />, { key: pathname })}
+        <form>
+          <input ref='username' type='text' placeholder='username' />
+          <input ref='password' type='password' placeholder='password' />
+          <button type='submit' onClick={this.handleSubmit}> Submit </button>
+        </form>
       </div>
     )
   }
-}
+})
 
 // render(<App />, document.getElementById("app"));
 
-class Page1 extends React.Component {
+class SuccessfulLogin extends React.Component {
   render() {
     return (
       <div>
-        <h1>Page 1</h1>
+        <h1>Oh hai, looks like you're authorized to be here!</h1>
       </div>
     )
   }
 }
 
-class Page2 extends React.Component {
+class FailedLogin extends React.Component {
   render() {
     return (
       <div>
-        <h1>Page 2</h1>
+        <h1>Your authentication failed. Please try again.</h1>
       </div>
     )
   }
 }
-
 
 render((
   <Router history={history}>
     <Route path="/" component={App}>
-      <Route path="page1" component={Page1} />
-      <Route path="page2" component={Page2} />
+      <Route path="success" component={SuccessfulLogin} />
+      <Route path="fail" component={FailedLogin} />
     </Route>
   </Router>
 ), document.getElementById('app'))
