@@ -1,64 +1,47 @@
-//enable React Devtools on Chrome and Firefox
-if (typeof window !== 'undefined') {
-    window.React = React;
-}
-
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, Route, Link, History } from 'react-router'
-import { createHistory, useBasename } from 'history'
-import authenticate from './auth'
+import { Router, Route, History } from 'react-router';
+import { createHistory, useBasename } from 'history';
+import authenticate from './auth';
+import SuccessfulLogin from './SuccessfulLogin';
+import FailedLogin from './FailedLogin';
 
 import './components/styles/app.css';
 
+// enable React Devtools on Chrome and Firefox
+if (typeof window !== 'undefined') {
+  window.React = React;
+}
+
+
 const history = useBasename(createHistory)({
-  basename: ''
-})
+  basename: '',
+});
 
 const App = React.createClass({
   mixins: [ History ],
 
-  handleSubmit (e) {
-    e.preventDefault();
-    if(authenticate(this.refs.username.value, this.refs.password.value)){
+  handleSubmit(event) {
+    event.preventDefault();
+    if (authenticate(this.refs.username.value, this.refs.password.value)) {
       this.history.pushState(null, `/success`);
+    } else {
+      this.history.pushState(null, `/fail`);
     }
   },
 
-  render () {
+  render() {
     return (
       <div>
         <form>
-          <input ref='username' type='text' placeholder='username' />
-          <input ref='password' type='password' placeholder='password' />
-          <button type='submit' onClick={this.handleSubmit}> Submit </button>
+          <input ref="username" type="text" placeholder="username" />
+          <input ref="password" type="password" placeholder="password" />
+          <button type="submit" onClick={this.handleSubmit}> Submit </button>
         </form>
       </div>
-    )
-  }
-})
-
-// render(<App />, document.getElementById("app"));
-
-class SuccessfulLogin extends React.Component {
-  render() {
-    return (
-      <div>
-        <h1>Oh hai, looks like you're authorized to be here!</h1>
-      </div>
-    )
-  }
-}
-
-class FailedLogin extends React.Component {
-  render() {
-    return (
-      <div>
-        <h1>Your authentication failed. Please try again.</h1>
-      </div>
-    )
-  }
-}
+    );
+  },
+});
 
 render((
   <Router history={history}>
@@ -67,4 +50,4 @@ render((
       <Route path="fail" component={FailedLogin} />
     </Route>
   </Router>
-), document.getElementById('app'))
+), document.getElementById('app'));
