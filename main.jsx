@@ -3,8 +3,8 @@ import { render } from 'react-dom';
 import { Router, Route, History } from 'react-router';
 import { createHistory, useBasename } from 'history';
 import authenticate from './auth';
-import SuccessfulLogin from './SuccessfulLogin';
-import FailedLogin from './FailedLogin';
+import SuccessfulLogin from './components/SuccessfulLogin.jsx';
+import FailedLogin from './components/FailedLogin.jsx';
 
 import './components/styles/app.css';
 
