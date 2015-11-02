@@ -1,5 +1,5 @@
-authenticate(username, password) => {
-  if(username === 'ben' && password === 123) return true;
+function authenticate(username, password) {
+  return username === 'ben' && password === 123;
 }
 
 var registeredUsers = {
