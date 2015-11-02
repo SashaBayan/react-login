@@ -38,6 +38,7 @@ const App = React.createClass({
           <input ref="password" type="password" placeholder="password" />
           <button type="submit" onClick={this.handleSubmit}> Submit </button>
         </form>
+        {this.props.children}
       </div>
     );
   },
@@ -51,3 +52,5 @@ render((
     </Route>
   </Router>
 ), document.getElementById('app'));
+
+
