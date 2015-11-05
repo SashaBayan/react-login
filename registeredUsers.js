@@ -1,10 +1,8 @@
-var registeredUsers = {
+export default {
   ben: {
-    password: 123
+    password: '123',
   },
   jerry: {
-    password: 'icecream'
-  }
-}
-
-export default registeredUsers;
+    password: 'icecream',
+  },
+};
