@@ -40,7 +40,7 @@ const App = React.createClass({
     .then(res => {
       if (res.status === 200) {
         res.json().then(json => {
-          if (res.body.loggedIn === true) {
+          if (json.loggedIn === true) {
             this.history.pushState(null, `/success`);
           } else {
             this.history.pushState(null, `/fail`);

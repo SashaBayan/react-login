@@ -5,7 +5,8 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const authenticate = require('./auth.js');
+const authenticate = require('./auth.js').authenticate;
+const checkUserExists = require('./auth.js').checkUserExists;
 const app = express();
 const port = process.env.PORT || 3000;
 const flash = require('connect-flash');
@@ -16,11 +17,12 @@ app.listen(port, () => console.log(`Your server is listening on localhost:${port
 
 passport.use(new LocalStrategy(
   (username, password, done) => {
-    console.log('hi there', {username, password});
-    if (authenticate(username, password)) {
+    if (!checkUserExists(username)) {
+      done(null, null, {message: 'That username is incorrect. Try again, breh?'});
+    } else if (authenticate(username, password)) {
       done(null, {username: username});
     } else {
-      done(null, null, {message: 'UNSUCCESSFUL LOGIN'});
+      done(null, null, {message: 'Definitely the wrong password, dude.'});
     }
   }
 ));
@@ -28,8 +30,6 @@ passport.use(new LocalStrategy(
 app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use('/', express.static(__dirname));
-// app.use(flash());
-// app.use(session({secret: 'yolo'}));
 
 app.get('*', (req, res) => {
   res.sendFile(__dirname + '/index.html');
@@ -41,10 +41,3 @@ app.post('/login', (req, res, next) => {
     res.send({loggedIn: true});
   })(req, res, next);
 });
-
-// app.post('/login', (req, res) => {
-
-//   console.log(req);
-//   // req.body
-//   res.send({meh: 'what', body:req.body});
-// });
