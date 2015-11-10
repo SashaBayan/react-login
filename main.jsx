@@ -6,6 +6,9 @@ import authenticate from './auth';
 import SuccessfulLogin from './components/SuccessfulLogin.jsx';
 import FailedLogin from './components/FailedLogin.jsx';
 
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
+
 import './components/styles/app.css';
 
 // enable React Devtools on Chrome and Firefox
@@ -23,17 +26,34 @@ const App = React.createClass({
 
   handleSubmit(event) {
     event.preventDefault();
-    if (authenticate(this.refs.username.value, this.refs.password.value)) {
-      this.history.pushState(null, `/success`);
-    } else {
-      this.history.pushState(null, `/fail`);
-    }
+    fetch('/login', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: this.refs.username.value,
+        password: this.refs.password.value,
+      }),
+    })
+    .then(res => {
+      if (res.status === 200) {
+        res.json().then(json => {
+          if (json.loggedIn === true) {
+            this.history.pushState(null, `/success`);
+          } else {
+            this.history.pushState(null, `/fail`);
+          }
+        });
+      }
+    });
   },
 
   render() {
     return (
       <div>
-        <form>
+        <form method="post">
           <input ref="username" type="text" placeholder="username" />
           <input ref="password" type="password" placeholder="password" />
           <button type="submit" onClick={this.handleSubmit}> Submit </button>
