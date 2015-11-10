@@ -9,14 +9,14 @@ var config = {
     filename: 'bundle.js'
   },
   module: {
-    loaders:[{ 
-      test: /\.js[x]?$/, 
-      exclude: /node_modules/, 
-      loader: 'babel-loader' 
+    loaders:[{
+      test: /\.js[x]?$/,
+      exclude: /node_modules/,
+      loader: 'babel-loader'
     },
     {
-      test: /\.css$/, 
-      loader: ExtractTextPlugin.extract('style-loader', 'css-loader') 
+      test: /\.css$/,
+      loader: 'style!css'
     }]
   },
   plugins: [
