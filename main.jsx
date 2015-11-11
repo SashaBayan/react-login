@@ -6,7 +6,7 @@ import { createHistory, useBasename } from 'history';
 import authenticate from './auth';
 import SuccessfulLogin from './components/SuccessfulLogin.jsx';
 import FailedLogin from './components/FailedLogin.jsx';
-import { Input, Button } from 'react-bootstrap';
+import { Input, Button, Row, Col } from 'react-bootstrap';
 
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
@@ -55,11 +55,19 @@ const App = React.createClass({
     return (
       <div className="container">
         <div className="login">
-          <form className="form" method="post">
-            <Input ref="username" type="text" placeholder="username" />
-            <Input ref="password" type="password" placeholder="password" />
-            <Button bsStyle="primary" type="submit" onClick={this.handleSubmit}> Submit </Button>
-          </form>
+          <Row>
+            <Col xs={6}>
+              <Input ref="username" type="text" placeholder="username"/>
+            </Col>
+            <Col xs={6}>
+              <Input ref="password" type="password" placeholder="password"/>
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={12}>
+              <Button bsStyle="primary" type="submit" onClick={this.handleSubmit}> Submit </Button>
+            </Col>
+          </Row>
         </div>
         {this.props.children}
       </div>
